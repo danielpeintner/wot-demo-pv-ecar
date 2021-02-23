@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    id="svg9438"
+    sodipodi:docname="eco car.svg"
+    viewBox="0 0 640 480"
+    version="1.1"
+    inkscape:version="0.48.0 r9654"
+  >
+  <title
+      id="title3470"
+    >eco car</title
+  >
+  <sodipodi:namedview
+      id="base"
+      bordercolor="#666666"
+      inkscape:pageshadow="2"
+      inkscape:window-y="-4"
+      pagecolor="#ffffff"
+      inkscape:window-height="712"
+      inkscape:window-maximized="1"
+      inkscape:zoom="0.77472527"
+      inkscape:window-x="-4"
+      showgrid="false"
+      borderopacity="1.0"
+      inkscape:current-layer="layer1"
+      inkscape:cx="320"
+      inkscape:cy="240"
+      inkscape:window-width="1280"
+      inkscape:pageopacity="0.0"
+      inkscape:document-units="px"
+  />
+  <g
+      id="layer1"
+      inkscape:label="Layer 1"
+      inkscape:groupmode="layer"
+    >
+    <path
+        id="path9337"
+        sodipodi:nodetypes="ccsssccsssccccc"
+        style="stroke-width:0;fill:#009100"
+        inkscape:connector-curvature="0"
+        d="m135.99 285.24 48.889 1.4865c-0.0254-0.46463-0.0514-0.9268-0.0514-1.3953 0-19.677 21.62-35.63 48.295-35.63s48.295 15.952 48.295 35.63c0 0.87377-0.0359 1.7353-0.12345 2.5931l142.34 0.72155c-0.1279-1.1274-0.21317-2.2548-0.21317-3.4059 0-22.245 23.978-40.288 53.548-40.288s53.548 18.043 53.548 40.288c0 1.5974-0.13836 3.1649-0.37834 4.7134l27.475-1.7071c11.665-1.2803 14.813-68.743-19.11-81.757-54.447-106.17-252.34-80.623-312.68-0.25417-79.964 3.9524-90.553 29.203-89.828 79.005z"
+    />
+    <path
+        id="path9343"
+        sodipodi:rx="70.710678"
+        sodipodi:ry="60.609154"
+        style="stroke-width:0;fill:#009100"
+        sodipodi:type="arc"
+        d="m-4.0406 561.43a70.711 60.609 0 1 1 -141.42 0 70.711 60.609 0 1 1 141.42 0z"
+        transform="matrix(.60797 0 0 .61066 279.33 -51.69)"
+        sodipodi:cy="561.42804"
+        sodipodi:cx="-74.751289"
+    />
+    <path
+        id="path9372"
+        sodipodi:rx="70.710678"
+        sodipodi:ry="60.609154"
+        style="stroke-width:0;fill:#009100"
+        sodipodi:type="arc"
+        d="m-4.0406 561.43a70.711 60.609 0 1 1 -141.42 0 70.711 60.609 0 1 1 141.42 0z"
+        transform="matrix(.62975 0 0 .66981 524.2 -88.34)"
+        sodipodi:cy="561.42804"
+        sodipodi:cx="-74.751289"
+    />
+    <path
+        id="path9374"
+        sodipodi:nodetypes="cccc"
+        style="stroke-width:0;fill:#ccff42"
+        inkscape:connector-curvature="0"
+        d="m247.34 210.47 123.32-2.1633 1.1138-57.702c-60.576 0-99.753 22.555-124.43 59.865z"
+    />
+    <path
+        id="path9376"
+        sodipodi:nodetypes="ccsc"
+        style="stroke-width:0;fill:#ccff42"
+        inkscape:connector-curvature="0"
+        d="m385.8 207.23-1.0494-58.074c88.822-9.5177 123.7 60.134 111.38 60.237-159.22 1.33-110.34-2.1633-110.34-2.1633z"
+    />
+    <path
+        id="path9378"
+        sodipodi:nodetypes="csccccccsc"
+        style="stroke-width:0;fill:#009100"
+        inkscape:connector-curvature="0"
+        d="m176.51 229.03s-31.348-28.519-49.373-32.245c-16.055-3.3181-48.197 9.6733-48.197 9.6733l-2.353-17.74-31.74-4.83v37.082l27.038 8.0609 5.8778-14.509s30.372-13.031 45.846-11.286c18.651 2.1026 52.9 25.795 52.9 25.795z"
+    />
+    <path
+        id="path9382"
+        style="stroke-width:0;fill:none"
+        inkscape:connector-curvature="0"
+        d="m39.605 209.62z"
+    />
+    <path
+        id="path9384"
+        style="stroke-width:0;fill:#009100"
+        inkscape:connector-curvature="0"
+        d="m45.724 208.09h-27.616l1.315 6.1192 24.986 1.53z"
+    />
+    <path
+        id="path9386"
+        d="m48.753 195.4h-27.616l1.315 4.178 24.986 1.045z"
+        style="stroke-width:0;fill:#009100"
+        inkscape:connector-curvature="0"
+    />
+    <path
+        id="path9388"
+        sodipodi:nodetypes="cscsc"
+        style="stroke-width:0;fill:#009100"
+        inkscape:connector-curvature="0"
+        d="m400.83 129.18s2.6464-17.076 8.1886-22.82c5.333-5.5261 21.629-8.6228 21.629-8.6228s-4.3198 11.009-8.065 15.38c-5.857 6.8381-21.752 16.063-21.752 16.063z"
+    />
+    <path
+        id="path9390"
+        d="m393.85 123.76s-6.2461-16.11-4.3181-23.856c1.8546-7.4524 14.419-18.282 14.419-18.282s1.7632 11.693 0.70603 17.352c-1.6537 8.8499-10.807 24.786-10.807 24.786z"
+        sodipodi:nodetypes="cscsc"
+        style="stroke-width:0;fill:#009100"
+        inkscape:connector-curvature="0"
+    />
+    <path
+        id="path9392"
+        sodipodi:nodetypes="cscsc"
+        style="stroke-width:0;fill:#009100"
+        inkscape:connector-curvature="0"
+        d="m389.99 128.19s-17.076-2.6454-22.82-8.1886c-5.5259-5.3321-8.6226-21.628-8.6226-21.628s11.008 4.3199 15.38 8.0643c6.8373 5.8577 16.062 21.752 16.062 21.752z"
+    />
+  </g
+  >
+  <metadata
+    >
+    <rdf:RDF
+      >
+      <cc:Work
+        >
+        <dc:format
+          >image/svg+xml</dc:format
+        >
+        <dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        />
+        <cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        />
+        <dc:publisher
+          >
+          <cc:Agent
+              rdf:about="http://openclipart.org/"
+            >
+            <dc:title
+              >Openclipart</dc:title
+            >
+          </cc:Agent
+          >
+        </dc:publisher
+        >
+        <dc:title
+          >eco car</dc:title
+        >
+        <dc:date
+          >2011-05-17T09:38:01</dc:date
+        >
+        <dc:description
+          >automotive clipart</dc:description
+        >
+        <dc:source
+          >https://openclipart.org/detail/139267/eco-car-by-netalloy</dc:source
+        >
+        <dc:creator
+          >
+          <cc:Agent
+            >
+            <dc:title
+              >netalloy</dc:title
+            >
+          </cc:Agent
+          >
+        </dc:creator
+        >
+        <dc:subject
+          >
+          <rdf:Bag
+            >
+            <rdf:li
+              >eco car</rdf:li
+            >
+            <rdf:li
+              >electric car</rdf:li
+            >
+            <rdf:li
+              >fuel efficient car</rdf:li
+            >
+            <rdf:li
+              >green car</rdf:li
+            >
+            <rdf:li
+              >least polluting car</rdf:li
+            >
+            <rdf:li
+              >non polluting car</rdf:li
+            >
+          </rdf:Bag
+          >
+        </dc:subject
+        >
+      </cc:Work
+      >
+      <cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        >
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        />
+      </cc:License
+      >
+    </rdf:RDF
+    >
+  </metadata
+  >
+</svg
+>
