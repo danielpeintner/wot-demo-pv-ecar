@@ -8,17 +8,22 @@ function get_td(addr) {
 			thingFactory.consume(td)
 			.then((thing) => {
 				showInteractions(thing);
+				registerHandlers(thing);
 				
-				// update properties every second
+				// update properties every X milliseconds
 				setInterval(async function(){ 
 					// update properties
 					updateProperties();
 					// update image
+					// let chargingStatus = await thing.readAllProperties();
 					let chargingStatus = await thing.readProperty("chargingStatus");
 					let driving = await thing.readProperty("driving");
 					let charging = await thing.readProperty("charging");
 					
-					document.getElementById("lblChargingStatus").innerHTML = chargingStatus + "%";
+					document.getElementById("drive").checked = driving;
+					document.getElementById("charge").checked = charging;
+					
+					document.getElementById("lblChargingStatus").innerHTML = chargingStatus.toFixed(2) + "%";
 					
 					if (chargingStatus <= 0) {
 						document.getElementById("ecarImage").src = "images/eco-car-empty.png";
@@ -38,7 +43,7 @@ function get_td(addr) {
 					} else {
 						document.getElementById("ecarImage").src = "images/eco-car-parking.png";
 					}
-				}, 1000);
+				}, 500);
 			});
 		}).catch((error) => {
 			window.alert("Could not fetch TD.\n" + error)
@@ -150,6 +155,31 @@ function showInteractions(thing) {
 	if ( placeholder.style.display === "none") {
 		placeholder.style.display = "block"
 	}
+}
+
+function registerHandlers(thing) {
+	// let driving = await thing.readProperty("driving");
+	// let charging = await thing.readProperty("charging");
+
+	// register checkbox listeners
+	/*
+	const checkboxDrive = document.getElementById("drive");
+	checkboxDrive.addEventListener('change', (event) => {
+		if (event.currentTarget.checked) {
+			thing.invokeAction("startDriving");
+		} else {
+			thing.invokeAction("stopDriving");
+		}
+	});
+	const checkboxCharge = document.getElementById("charge");
+	checkboxCharge.addEventListener('change', (event) => {
+		if (event.currentTarget.checked) {
+			thing.invokeAction("startCharging");
+		} else {
+			thing.invokeAction("stopCharging");
+		}
+	});
+	*/
 }
 
 function updateProperties() {

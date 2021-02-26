@@ -20,7 +20,7 @@ function driveCar() {
         //  code after time
         let decStep = 0.25;
         chargingStatus -= 1;
-        if (chargingStatus < 0) {
+        if (chargingStatus <= 0) {
             driving = false;
             chargingStatus = 0.0;
             console.log("Battery drained :-(");
