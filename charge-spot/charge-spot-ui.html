@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>PV System Demo</title>
+    <title>Charge Spot Demo</title>
     <!-- Foundation CSS framework -->
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/foundation/5.5.3/css/foundation.min.css'>
     <!-- Font Awesome icons -->
@@ -13,7 +13,7 @@
 	<!-- https://cdn.jsdelivr.net/npm/@node-wot/browser-bundle@latest/dist/wot-bundle.min.js -->
 	<script src="https://cdn.jsdelivr.net/npm/@node-wot/browser-bundle@0.7.4/dist/wot-bundle.min.js" defer></script>
 	</script>
-    <script src="pv-system-ui.js" defer></script>
+    <script src="charge-spot-ui.js" defer></script>
     
     <script>
     // Set the default CSS theme and icon library globally
@@ -32,24 +32,24 @@
   <div class="container">
     <div id="topbar" class="row">
       <div class="medium-12 columns">
-        <h1>PV System</h1>
-		<input readonly="readonly" id="td_addr" type="url" value="http://localhost:8081/pv-system"><!-- http://plugfest.thingweb.io:8083/ecar-->
+        <h1>Charge Spot</h1>
+		<input readonly="readonly" id="td_addr" type="url" value="http://localhost:8082/charge-spot"><!-- http://plugfest.thingweb.io:8083/ecar-->
       </div>
     </div>
     <div id="interactions" class="row" style="display: none;">
-      <div class="medium-6 columns">
+      <div class="medium-4 columns">
         <figure>
           <figcaption><h4>Properties</h4></figcaption>
           <dl id="properties" class="side-nav"></dl>
         </figure>
       </div>
-      <div class="medium-6 columns">
+      <div class="medium-4 columns">
         <figure>
           <figcaption><h4>Actions</h4></figcaption>
           <ul id="actions" class="side-nav"></ul>
         </figure>
       </div>
-      <!-- <div class="medium-4 columns">
+      <!--<div class="medium-4 columns">
         <figure>
           <figcaption><h4>Events</h4></figcaption>
           <ul id="events" class="side-nav"></ul>

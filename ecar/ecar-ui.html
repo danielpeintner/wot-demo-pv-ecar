@@ -97,8 +97,8 @@ input:checked + .slider:before {
   <div class="container">
     <div id="topbar" class="row">
       <div class="medium-12 columns">
-        <h1>eCar Charging in the Browser</h1>
-		<input readonly="readonly" id="td_addr" type="url" value="http://localhost:8080/ecar"><!-- http://plugfest.thingweb.io:8083/ecar-->
+        <h1>eCar Charging</h1>
+		<input readonly="readonly" id="td_addr" type="url" value="http://localhost:8083/ecar"><!-- http://plugfest.thingweb.io:8083/ecar-->
       </div>
     </div>
     <div id="interactions" class="row" style="display: none;">
@@ -137,6 +137,11 @@ input:checked + .slider:before {
 		<div class="col-sm-8">
 			<img id="ecarImage" src="images/eco-car-parking.png" ></img> 
 			<span id="lblChargingStatus" style="font-size: x-large;" >100.00%</span>
+		</div>
+	</div>
+	<div class="row">
+		<div class="medium-12 columns">
+			<input style="background: RGB(255,0,0)" readonly="readonly" id="error" value="">
 		</div>
 	</div>
   </div>

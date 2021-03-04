@@ -5,7 +5,7 @@ const HttpServer = require('@node-wot/binding-http').HttpServer
 // create Servient add HTTP binding with port configuration
 let servient = new Servient();
 servient.addServer(new HttpServer({
-    // port: 8081 // (default 8080)
+    port: 8083 // (default 8080)
 }));
 
 let chargingStatus;

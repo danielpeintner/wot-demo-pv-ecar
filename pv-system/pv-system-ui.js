@@ -1,6 +1,10 @@
 
 let counterProperties = [];
 
+function showError(s) {
+	document.getElementById("error").value = new Date().toISOString() + ": " + s; 
+}
+
 function get_td(addr) {
 	servient.start().then((thingFactory) => {
 		helpers.fetch(addr).then((td) => {
@@ -15,7 +19,7 @@ function get_td(addr) {
 				}, 500);
 			});
 		}).catch((error) => {
-			window.alert("Could not fetch TD.\n" + error)
+			showError("Could not fetch TD.\n" + error)
 		})
 	})
 }
@@ -41,7 +45,7 @@ function showInteractions(thing) {
 				.then(
 					res => { ddItem.textContent = res; }
 				)
-				.catch(err => window.alert("error: " + err))
+				.catch(err => showError("error: " + err))
 			}
 			
 			// update value right-away
@@ -104,7 +108,7 @@ function showInteractions(thing) {
 					.then(()=> {
 						// OK
 					})
-					.catch((error) => {  window.alert("Event " + evnt + " error\nMessage: " + error); })
+					.catch((error) => {  showError("Event " + evnt + " error\nMessage: " + error); })
 					;
 				} else if (!document.getElementById(evnt).checked && eventSubscriptions[evnt]) {
 					console.log("Try to unsubscribing for event: " + evnt);
@@ -113,7 +117,7 @@ function showInteractions(thing) {
 					.then(()=> {
 						// OK
 					})
-					.catch((error) => {  window.alert("Event " + evnt + " error\nMessage: " + error); });
+					.catch((error) => { showError("Event " + evnt + " error\nMessage: " + error); });
 					
 				}
 			}

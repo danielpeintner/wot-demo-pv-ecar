@@ -5,7 +5,7 @@ const HttpServer = require('@node-wot/binding-http').HttpServer
 // create Servient add HTTP binding with port configuration
 let servient = new Servient();
 servient.addServer(new HttpServer({
-    // port: 8081 // (default 8080)
+    port: 8081 // (default 8080)
 }));
 
 let status; // enum
@@ -19,7 +19,7 @@ function start() {
 }
 
 function stop() {
-    console.log("Starting PV System...");
+    console.log("Stopping PV System...");
     status = "powerOff";
 	power = 0;
 }
@@ -68,8 +68,7 @@ servient.start().then((WoT) => {
         description: "Solar power system",
         properties: {
 			"status": {
-				"title": "Betriebszustand",
-				"description": "Mögliche Zustände (Strom Produktion, Nachtmodus, Fehler)",
+				"title": "Operating status",
 				"type": "string",
 				"enum": [
 					"powerOn",
@@ -78,8 +77,7 @@ servient.start().then((WoT) => {
 				]
 			},
 			"power": {
-				"title": "Aktuelle Leistung",
-				"description": "Leistung in Watt",
+				"title": "Current power",
 				"type": "number",
 				"unit": "W"
 			},

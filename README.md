@@ -11,6 +11,17 @@ subdirectory `pv-system`
 * `node pv-system.js`
 
 
+## Charge Spot System
+
+subdirectory `charge-spot`
+
+
+* `npm install @node-wot/core@0.7.5`
+* `npm install @node-wot/binding-http@0.7.5`
+* `node charge-spot.js`
+
+
+
 ## eCar
 
 subdirectory `ecar`
