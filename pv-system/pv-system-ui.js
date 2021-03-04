@@ -12,38 +12,6 @@ function get_td(addr) {
 				setInterval(async function(){ 
 					// update properties
 					updateProperties();
-					
-					/*
-					// update image
-					// let chargingStatus = await thing.readAllProperties();
-					let chargingStatus = await thing.readProperty("chargingStatus");
-					let driving = await thing.readProperty("driving");
-					let charging = await thing.readProperty("charging");
-					
-					document.getElementById("drive").checked = driving;
-					document.getElementById("charge").checked = charging;
-					
-					document.getElementById("lblChargingStatus").innerHTML = chargingStatus.toFixed(2) + "%";
-					
-					if (chargingStatus <= 0) {
-						document.getElementById("ecarImage").src = "images/eco-car-empty.png";
-					} else if (driving) {
-						if (drivePos == 1) {
-							document.getElementById("ecarImage").src = "images/eco-car-drive2.png";
-							drivePos = 2;
-						} else if (drivePos == 2) {
-							document.getElementById("ecarImage").src = "images/eco-car-drive3.png";
-							drivePos = 3;
-						} else {
-							document.getElementById("ecarImage").src = "images/eco-car-drive1.png";
-							drivePos = 1;
-						}
-					} else if (charging) {
-						document.getElementById("ecarImage").src = "images/eco-car-charge.png";
-					} else {
-						document.getElementById("ecarImage").src = "images/eco-car-parking.png";
-					}
-					*/
 				}, 500);
 			});
 		}).catch((error) => {
@@ -156,31 +124,6 @@ function showInteractions(thing) {
 	if ( placeholder.style.display === "none") {
 		placeholder.style.display = "block"
 	}
-}
-
-function registerHandlers(thing) {
-	// let driving = await thing.readProperty("driving");
-	// let charging = await thing.readProperty("charging");
-
-	// register checkbox listeners
-	/*
-	const checkboxDrive = document.getElementById("drive");
-	checkboxDrive.addEventListener('change', (event) => {
-		if (event.currentTarget.checked) {
-			thing.invokeAction("startDriving");
-		} else {
-			thing.invokeAction("stopDriving");
-		}
-	});
-	const checkboxCharge = document.getElementById("charge");
-	checkboxCharge.addEventListener('change', (event) => {
-		if (event.currentTarget.checked) {
-			thing.invokeAction("startCharging");
-		} else {
-			thing.invokeAction("stopCharging");
-		}
-	});
-	*/
 }
 
 function updateProperties() {

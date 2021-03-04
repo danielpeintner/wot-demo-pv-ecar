@@ -10,7 +10,7 @@ servient.addServer(new HttpServer({
 
 let status; // enum
 let power; // number
-let hour;
+let hourOfDay;
 
 function start() {
     console.log("Starting PV System...");
@@ -33,19 +33,21 @@ function error() {
 
 function sunMovesOn() {
 	setTimeout(function(){
-		if (hour <= 22) {
-			hour += 1;
-		} else {
-			hour = 0;
-		}
+		// get current seconds and transform it into hours
+		// 60 seconds ~ 24 hours -> 2.5 secs means 1 hour
+		// --> 1 minute is one day
+		let date = new Date();
+		let secs = date.getSeconds();
+		hourOfDay = Math.round(secs / 2.5);
+		
 		if (status == "powerOn") {
-			if (hour >= 6 && hour <= 18) {
+			if (hourOfDay >= 6 && hourOfDay <= 18) {
 				// "power" hours
 				let step = 1000;
-				if (hour > 12) {
-					power = (19-hour) * step;
+				if (hourOfDay > 12) {
+					power = (19-hourOfDay) * step;
 				} else {
-					power = (hour-5) * step;
+					power = (hourOfDay-5) * step;
 				}
 			} else {
 				power = 0;
@@ -57,7 +59,7 @@ function sunMovesOn() {
 		
 		// moves on all the time
 		sunMovesOn();
-	}, 1000);
+	}, 250);
 }
 
 servient.start().then((WoT) => {
@@ -81,7 +83,7 @@ servient.start().then((WoT) => {
 				"type": "number",
 				"unit": "W"
 			},
-			"hour": {
+			"hourOfDay": {
 				"type": "number"
 			}
         },
@@ -98,12 +100,12 @@ servient.start().then((WoT) => {
         // init property values
         status = "powerOff";
         power = 0.0;
-		hour = 6; // with morning hours
+		hourOfDay = 6; // with morning hours
 		
 		// set property handlers (using async-await)
 		thing.setPropertyReadHandler("status", async () => status);
         thing.setPropertyReadHandler("power", async () => power);
-		thing.setPropertyReadHandler("hour", async () => hour);
+		thing.setPropertyReadHandler("hourOfDay", async () => hourOfDay);
 
 
 		// set action handlers (using async-await)
