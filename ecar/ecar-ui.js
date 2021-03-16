@@ -22,12 +22,12 @@ function get_td(addr) {
 					// let chargingStatus = await thing.readAllProperties();
 					let chargingStatus = await thing.readProperty("chargingStatus");
 					let driving = await thing.readProperty("driving");
-					let charging = await thing.readProperty("charging");
+					let charging = await thing.readProperty("pluggedIn");
 					
 					document.getElementById("drive").checked = driving;
 					document.getElementById("charge").checked = charging;
 					
-					document.getElementById("lblChargingStatus").innerHTML = chargingStatus.toFixed(2) + "%";
+					document.getElementById("lblChargingStatus").innerHTML = chargingStatus; // .toFixed(2) + "%";
 					
 					if (chargingStatus <= 0) {
 						document.getElementById("ecarImage").src = "images/eco-car-empty.png";

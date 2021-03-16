@@ -2,27 +2,63 @@
 const Servient = require('@node-wot/core').Servient
 const HttpServer = require('@node-wot/binding-http').HttpServer
 
+const HttpClientFactory = require("@node-wot/binding-http").HttpClientFactory
+const Helpers = require("@node-wot/core").Helpers
+
 // create Servient add HTTP binding with port configuration
 let servient = new Servient();
 servient.addServer(new HttpServer({
     port: 8083 // (default 8080)
 }));
 
+// Client
+let client = new Servient();
+client.addClientFactory(new HttpClientFactory({
+    servient: {
+        clientOnly: true,
+    }
+}));
+let wotHelper = new Helpers(client);
+
+// turn off some log messages
+const debug = console.debug
+console.debug = (package, ...args) => {
+    // prune all debug messages?
+    /*
+    if (package !== "[core]" && package !== "[core/wot-impl]" && package !== "[core/servient]" && package !== "[core/exposed-thing]" && package !== "[core/helpers]" && package !== "[core/consumed-thing]" && package !== "[core/content-senders]" && package !== "[binding-http]") {
+        debug(package,...args)
+    }
+    */
+}
+console.warn = (package, ...args) => {
+    if (package !== "[core/content-senders]" &&
+        (package !== "[binding-http]" && args !== "LOCALHOST FIX")) {
+        debug(package, ...args)
+    }
+}
+
+const maxPower = 50000; // 50 kW
+
+const chargeSpotUrl = "http://localhost:8082/charge-spot";
+let chargeSpot = null;
+
+let power;
 let chargingStatus;
 let driving;
-let charging;
+let pluggedIn;
 
 function driveCar() {
     console.log("Driving...");
     driving = true;
-    charging = false;
-    setTimeout(function(){
+    plugOutCar();
+    setTimeout(function () {
         //  code after time
-        let decStep = 0.25;
-        chargingStatus -= 1;
-        if (chargingStatus <= 0) {
+        let decStep = 250;
+        power -= decStep;
+        updateChargingStatus();
+        if (power <= 0) {
             driving = false;
-            chargingStatus = 0.0;
+            power = 0.0;
             console.log("Battery drained :-(");
         } else {
             // keep on driving ?
@@ -30,8 +66,20 @@ function driveCar() {
                 driveCar();
             }
         }
-        console.log("Charging status decreased by " + decStep + " -> " + chargingStatus);
+        console.log("Power decreased by " + decStep + " -> " + power);
     }, 250);
+}
+
+function updateChargingStatus() {
+    if (power <= 0) {
+        power = 0;
+        chargingStatus = 0.0;
+    } else if (power >= maxPower) {
+        power = maxPower;
+        chargingStatus = 100.0;
+    } else {
+        chargingStatus = (power / maxPower * 100).toFixed(2);
+    }
 }
 
 function stopCar() {
@@ -39,31 +87,61 @@ function stopCar() {
     driving = false;
 }
 
-function chargeCar() {
-    console.log("Charging...");
-    charging = true;
-    driving = false;
-    setTimeout(function(){
-        //  code after time
-        let incStep = 0.25;
-        chargingStatus += incStep;
-        if (chargingStatus >= 100) {
-            chargingStatus = 100.0;
-            charging = false;
-            console.log("Battery fully charged :-)");
-        } else {
-            // keep on charging ?
-            if (charging) {
-                chargeCar();
-            }
+function plugInCar() {
+    console.log("Plugging-in...");
+    stopCar();
+
+    // Note: connect car and wait to be charged
+    wotHelper.fetch(chargeSpotUrl).then(async (td) => {
+        // using await for serial execution (note 'async' in then() of fetch())
+        try {
+            client.start().then((WoT) => {
+                WoT.consume(td).then((thing) => {
+                    chargeSpot = thing;
+                    thing.invokeAction("plugInCar", "http://localhost:8083/ecar").then((p) => {
+                        console.log("Plug-in successful");
+                        pluggedIn = true;
+                        driving = false;
+                    }).catch((err) => {
+                        let serr = "Error:" + err;
+                        connectedError = new Date().toISOString() + ": " + serr;
+                        console.error(serr);
+                    });
+                });
+            });
+        } catch (err) {
+            let serr = "Script error:" + err;
+            connectedError = new Date().toISOString() + ": " + serr;
+            console.error(serr);
         }
-        console.log("Charging status increased by " + incStep + " -> " + chargingStatus);
-    }, 250);
+    }).catch((err) => {
+        let serr = "Fetch error:" + err;
+        connectedError = new Date().toISOString() + ": " + serr;
+        console.error(serr);
+    });
 }
 
-function stopCharging() {
-    console.log("STOP charging!");
-    charging = false;
+async function plugOutCar() {
+    try {
+        if (chargeSpot) {
+            await chargeSpot.invokeAction("plugOutCar");
+        }
+        pluggedIn = false;
+        console.log("STOP being plugged in!");
+    } catch (err) {
+        let serr = "PlugOut error:" + err;
+        connectedError = new Date().toISOString() + ": " + serr;
+        console.error(serr);
+    }
+}
+
+function charge(watt) {
+    console.log("Charge " + watt + " Watt.");
+    power += watt;
+    if (power >= maxPower) {
+        plugOutCar();
+    }
+    updateChargingStatus();
 }
 
 servient.start().then((WoT) => {
@@ -71,6 +149,12 @@ servient.start().then((WoT) => {
         title: "eCar",
         description: "eCarThing",
         properties: {
+            power: {
+                type: "number",
+                description: "Current power in Watt ",
+                observable: true,
+                readOnly: true
+            },
             chargingStatus: {
                 type: "number",
                 description: "Current chargingStatus in % (0 ... 100%)",
@@ -85,9 +169,9 @@ servient.start().then((WoT) => {
                 observable: true,
                 readOnly: true
             },
-            charging: {
+            pluggedIn: {
                 type: "boolean",
-                description: "Is car charging",
+                description: "Is car plugged-in",
                 observable: true,
                 readOnly: true
             }
@@ -99,38 +183,49 @@ servient.start().then((WoT) => {
             stopDriving: {
                 description: "Stopping to drive"
             },
-            startCharging: {
-                description: "Starting to charge"
+            plugIn: {
+                description: "Plugin-in"
             },
-            stopCharging: {
-                description: "Stopping to charge"
+            plugOut: {
+                description: "Plug-out"
+            },
+            charge: {
+                description: "Plug-out",
+                input: {
+                    type: "number" // Watt
+                }
             }
         }
     }).then((thing) => {
         console.log("Produced " + thing.getThingDescription().title);
         // init property values
-        chargingStatus = 85.25;
+        power = 40000;
+        updateChargingStatus();
         driving = false;
-        charging = false;
-		// set property handlers (using async-await)
-		thing.setPropertyReadHandler("chargingStatus", async () => chargingStatus);
+        pluggedIn = false;
+        // set property handlers (using async-await)
+        thing.setPropertyReadHandler("power", async () => power);
+        thing.setPropertyReadHandler("chargingStatus", async () => chargingStatus);
         thing.setPropertyReadHandler("driving", async () => driving);
-        thing.setPropertyReadHandler("charging", async () => charging);
+        thing.setPropertyReadHandler("pluggedIn", async () => pluggedIn);
 
 
-		// set action handlers (using async-await)
-		thing.setActionHandler("startDriving", async (params, options) => {
+        // set action handlers (using async-await)
+        thing.setActionHandler("startDriving", async (params, options) => {
             driveCar();
-		});
-		thing.setActionHandler("stopDriving", async (params, options) => {
+        });
+        thing.setActionHandler("stopDriving", async (params, options) => {
             stopCar();
-		});
-        thing.setActionHandler("startCharging", async (params, options) => {
-            chargeCar();
-		});
-        thing.setActionHandler("stopCharging", async (params, options) => {
-            stopCharging();
-		});
+        });
+        thing.setActionHandler("plugIn", async (params, options) => {
+            plugInCar();
+        });
+        thing.setActionHandler("plugOut", async (params, options) => {
+            plugOutCar();
+        });
+        thing.setActionHandler("charge", async (params, options) => {
+            charge(params);
+        });
 
         // expose the thing
         thing.expose().then(() => {

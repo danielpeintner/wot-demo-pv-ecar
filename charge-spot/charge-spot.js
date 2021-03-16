@@ -8,15 +8,36 @@ const Helpers = require("@node-wot/core").Helpers
 // create Servient add HTTP binding with port configuration
 let servient = new Servient();
 servient.addServer(new HttpServer({
-    port: 8082 // (default 8080)
+	port: 8082 // (default 8080)
 }));
 
 // Client
 let client = new Servient();
-client.addClientFactory(new HttpClientFactory({servient: {
-        clientOnly: true,
-    }}));
+client.addClientFactory(new HttpClientFactory({
+	servient: {
+		clientOnly: true,
+	}
+}));
 let wotHelper = new Helpers(client);
+
+
+// turn off some log messages
+const debug = console.debug
+console.debug = (package, ...args) => {
+	// prune all debug messages?
+	/*
+	if (package !== "[core]" && package !== "[core/exposed-thing]" && package !== "[core/content-senders]" && package !== "[binding-http]") {
+		debug(package,...args)
+	}
+	*/
+}
+console.warn = (package, ...args) => {
+	if (package !== "[core/content-senders]" &&
+		(package !== "[binding-http]" && args !== "LOCALHOST FIX")) {
+		debug(package, ...args)
+	}
+}
+
 
 
 let connected = false;
@@ -26,14 +47,15 @@ let connectedPV;
 let connectedError;
 
 let status; // enum
-let powerOutlet; // number
 
-function connect() {
+let connectedCar = null;
+
+function connectPV() {
 	connectedUrl = "http://localhost:8081/pv-system";
-    console.log("Connect to " + connectedUrl + "...");
+	console.log("Connect to " + connectedUrl + "...");
 	connectedPower = 0;
-    powerOutlet = 0;
-	
+	powerOutlet = 0;
+
 	wotHelper.fetch(connectedUrl).then(async (td) => {
 		// using await for serial execution (note 'async' in then() of fetch())
 		try {
@@ -47,82 +69,119 @@ function connect() {
 			});
 		} catch (err) {
 			let serr = "Script error:" + err;
-			connectedError = new Date().toISOString() + ": " + serr; 
+			connectedError = new Date().toISOString() + ": " + serr;
 			console.error(serr);
 		}
 	}).catch((err) => {
 		let serr = "Fetch error:" + err;
-		connectedError = new Date().toISOString() + ": " + serr; 
+		connectedError = new Date().toISOString() + ": " + serr;
 		console.error(serr);
 	});
 }
 
 
 function checkPVConnection() {
-	setTimeout(function(){
+	setTimeout(function () {
 		// get connectedPower 
-		if (connectedPV) {
+		if (connectedPV && connected) {
 			connectedPV.readProperty("power").then((p) => {
-				connectedPower = p;
+				connectedPower = connected ? p : 0;
 				connectedError = null;
 			}).catch((err) => {
 				let serr = "Error:" + err;
-				connectedError = new Date().toISOString() + ": " + serr; 
+				connectedError = new Date().toISOString() + ": " + serr;
 				console.error(serr);
-				unconnect();
-			});			
+				unconnectPV();
+			});
 		} else {
 			connected = false;
 		}
-		
+
 		// check unless not connected any longer
 		if (connected) {
 			checkPVConnection();
 		} else {
+			connectedPV = null;
 			connectedPower = 0;
 		}
 	}, 250);
 }
 
 
-function unconnect() {
-    console.log("Unconnect ...");
+function unconnectPV() {
+	console.log("Unconnect ...");
 	connected = false;
 	connectedPower = 0;
 	connectedPV = null;
 	connectedUrl = null;
-    powerOutlet = 0;
 }
 
-
-function plugIn() {
-    console.log("Cable plugged in...");
+function plugInCar(carUrl) {
+	console.log("Cable plugged in into " + carUrl + "...");
+	connectedCar = null; // unset
 	status = "plugIn";
-    powerOutlet = 0;
+
+	wotHelper.fetch(carUrl).then(async (td) => {
+		// using await for serial execution (note 'async' in then() of fetch())
+		try {
+			client.start().then((WoT) => {
+				WoT.consume(td).then((thing) => {
+					connectedCar = thing;
+					chargeCar();
+				});
+			});
+		} catch (err) {
+			let serr = "Script error:" + err;
+			connectedError = new Date().toISOString() + ": " + serr;
+			console.error(serr);
+		}
+	}).catch((err) => {
+		let serr = "Fetch error:" + err;
+		connectedError = new Date().toISOString() + ": " + serr;
+		console.error(serr);
+	});
+
 }
 
-function plugOut() {
-    console.log("Cable plugged out...");
-    status = "plugOut";
-	powerOutlet = 0;
+function chargeCar() {
+	setTimeout(function () {
+		//  code after time
+		if (connectedCar) {
+			let powerToCharge = connectedPower / 10;
+			connectedCar.invokeAction("charge", powerToCharge).then((p) => {
+				console.log("Successful charged " + powerToCharge + " Watt");
+				// -> charge again
+				chargeCar();
+			}).catch((err) => {
+				let serr = "Error:" + err;
+				connectedError = new Date().toISOString() + ": " + serr;
+				console.error(serr);
+				// in case of failure plug-out
+				plugOutCar();
+			});
+		}
+	}, 250);
+}
+
+function plugOutCar() {
+	console.log("Cable plugged out...");
+	connectedCar = null;
+	status = "plugOut";
 }
 
 function error() {
 	console.log("Charge Spot failure...");
 	status = "error";
-	powerOutlet = 0;
 }
 
 
 servient.start().then((WoT) => {
-    WoT.produce({
-        title: "Charge Spot",
-        properties: {
+	WoT.produce({
+		title: "Charge Spot",
+		properties: {
 			"status": {
 				"type": "string",
 				"enum": [
-					"started",
-					"stopped",
 					"plugIn",
 					"plugOut",
 					"error"
@@ -142,71 +201,60 @@ servient.start().then((WoT) => {
 			},
 			"connectedError": {
 				"type": "string"
-			},
-			"powerOutlet": {
-				"description": "power on outlet",
-				"type": "number",
-				"unit": "W"
 			}
-        },
-        actions: {
-			"connect": {
+		},
+		actions: {
+			"connectPV": {
 			},
-			"unconnect": {
+			"unconnectPV": {
 			},
-			"plugIn": {
+			"plugInCar": {
 			},
-			"plugOut": {
+			"plugOutCar": {
 			},
 			"error": {
 			}
-        }
-    }).then((thing) => {
-        console.log("Produced " + thing.getThingDescription().title);
-        // init property values
+		}
+	}).then((thing) => {
+		console.log("Produced " + thing.getThingDescription().title);
+		// init property values
 		connected = false;
 		connectedPower = 0.0;
-		
-        status = "powerOff";
-        powerOutlet = 0.0;
-		
+
+		status = "plugOut";
+
 		// set property handlers (using async-await)
 		thing.setPropertyReadHandler("connected", async () => connected);
 		thing.setPropertyReadHandler("connectedPower", async () => connectedPower);
 		thing.setPropertyReadHandler("connectedUrl", async () => connectedUrl);
 		thing.setPropertyReadHandler("connectedError", async () => connectedError);
-		
-		thing.setPropertyReadHandler("status", async () => status);
-        thing.setPropertyReadHandler("powerOutlet", async () => powerOutlet);
 
+		thing.setPropertyReadHandler("status", async () => status);
 
 		// set action handlers (using async-await)
-		thing.setActionHandler("connect", async (params, options) => {
-            connect();
+		thing.setActionHandler("connectPV", async (params, options) => {
+			connectPV();
 		});
-		thing.setActionHandler("unconnect", async (params, options) => {
-            unconnect();
+		thing.setActionHandler("unconnectPV", async (params, options) => {
+			unconnectPV();
 		});
-		thing.setActionHandler("plugIn", async (params, options) => {
-            plugIn();
+		thing.setActionHandler("plugInCar", async (params, options) => {
+			plugInCar(params);
 		});
-		thing.setActionHandler("plugOut", async (params, options) => {
-            plugOut();
+		thing.setActionHandler("plugOutCar", async (params, options) => {
+			plugOutCar();
 		});
 		thing.setActionHandler("error", async (params, options) => {
-            error();
+			error();
 		});
 
-        // expose the thing
-        thing.expose().then(() => {
-            console.info(thing.getThingDescription().title + " ready");
-            console.info("TD : " + JSON.stringify(thing.getThingDescription()));
-            thing.readProperty("status").then((c) => {
-                console.log("status is " + c);
-            });
-            thing.readProperty("powerOutlet").then((c) => {
-                console.log("powerOutlet is " + c);
-            });
-        });
-    });
+		// expose the thing
+		thing.expose().then(() => {
+			console.info(thing.getThingDescription().title + " ready");
+			console.info("TD : " + JSON.stringify(thing.getThingDescription()));
+			thing.readProperty("status").then((c) => {
+				console.log("status is " + c);
+			});
+		});
+	});
 });
