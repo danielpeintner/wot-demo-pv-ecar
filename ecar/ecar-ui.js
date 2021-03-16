@@ -23,8 +23,8 @@ function get_td(addr) {
 					let driving =  allProps["driving"]; // await thing.readProperty("driving");
 					let charging =  allProps["pluggedIn"]; // await thing.readProperty("pluggedIn");
 					
-					document.getElementById("drive").checked = driving;
-					document.getElementById("charge").checked = charging;
+					document.getElementById("driving").checked = driving;
+					document.getElementById("charging").checked = charging;
 					
 					document.getElementById("lblChargingStatus").innerHTML = chargingStatus; // .toFixed(2) + "%";
 					

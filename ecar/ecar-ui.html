@@ -115,30 +115,20 @@ input:checked + .slider:before {
         </figure>
       </div>
       <div class="medium-4 columns">
-        <figure>
-          <figcaption><h4>Events</h4></figcaption>
-          <ul id="events" class="side-nav"></ul>
-        </figure>
+		<img id="ecarImage" src="images/eco-car-parking.png" ></img> 
+		<span id="lblChargingStatus" style="font-size: x-large;" >100.00%</span>
+		  <h3>Driving</h3>
+		  <label class="switch">
+			<input type="checkbox" id="driving" disabled="disabled">
+			<span class="slider round"></span>
+		  </label>
+		  <h3>Charging</h3>
+		  <label class="switch">
+			<input type="checkbox" id="charging" disabled="disabled">
+			<span class="slider round"></span>
+		  </label>
       </div>
     </div>
-	<div class="row">
-		<div class="col-sm-4">
-		  <h3>Drive</h3>
-		  <label class="switch">
-			<input type="checkbox" id="drive" disabled="disabled">
-			<span class="slider round"></span>
-		  </label>
-		  <h3>Charge</h3>
-		  <label class="switch">
-			<input type="checkbox" id="charge" disabled="disabled">
-			<span class="slider round"></span>
-		  </label>
-		</div>
-		<div class="col-sm-8">
-			<img id="ecarImage" src="images/eco-car-parking.png" ></img> 
-			<span id="lblChargingStatus" style="font-size: x-large;" >100.00%</span>
-		</div>
-	</div>
 	<div class="row">
 		<div class="medium-12 columns">
 			<input style="background: RGB(255,0,0)" readonly="readonly" id="error" value="">
