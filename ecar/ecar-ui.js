@@ -12,17 +12,16 @@ function get_td(addr) {
 			thingFactory.consume(td)
 			.then((thing) => {
 				showInteractions(thing);
-				registerHandlers(thing);
 				
 				// update properties every X milliseconds
 				setInterval(async function(){ 
 					// update properties
 					updateProperties();
 					// update image
-					// let chargingStatus = await thing.readAllProperties();
-					let chargingStatus = await thing.readProperty("chargingStatus");
-					let driving = await thing.readProperty("driving");
-					let charging = await thing.readProperty("pluggedIn");
+					let allProps = await thing.readAllProperties();
+					let chargingStatus = allProps["chargingStatus"]; // await thing.readProperty("chargingStatus");
+					let driving =  allProps["driving"]; // await thing.readProperty("driving");
+					let charging =  allProps["pluggedIn"]; // await thing.readProperty("pluggedIn");
 					
 					document.getElementById("drive").checked = driving;
 					document.getElementById("charge").checked = charging;
@@ -111,79 +110,11 @@ function showInteractions(thing) {
 			}
 		}
 	};
-	let eventSubscriptions = {}
-	for ( let evnt in td.events ) {
-		if (td.events.hasOwnProperty(evnt)) {
-			let item = document.createElement("li");
-			item.setAttribute('dir', 'auto'); // direction-independence, direction-heuristic
-			let link = document.createElement("a");
-			link.appendChild(document.createTextNode(evnt));
-
-			let checkbox = document.createElement("div");
-			checkbox.className = "switch small"
-			checkbox.innerHTML = '<input id="' + evnt + '" type="checkbox">\n<label for="' + evnt + '"></label>'
-			item.appendChild(link);
-			item.appendChild(checkbox)
-			document.getElementById("events").appendChild(item);
-
-			eventSubscriptions[evnt] = false;
-
-			checkbox.onclick = (click) => {
-				if (document.getElementById(evnt).checked && !eventSubscriptions[evnt] && eventSubscriptions[evnt]===false) {
-					console.log("Try subscribing for event: " + evnt);
-					eventSubscriptions[evnt] = true;
-					thing.subscribeEvent(evnt, function (data) {
-						console.log("Data:" + data);
-						updateProperties();
-					})
-					.then(()=> {
-						// OK
-					})
-					.catch((error) => {  showError("Event " + evnt + " error\nMessage: " + error); })
-					;
-				} else if (!document.getElementById(evnt).checked && eventSubscriptions[evnt]) {
-					console.log("Try to unsubscribing for event: " + evnt);
-					eventSubscriptions[evnt] = false;
-					thing.unsubscribeEvent(evnt)
-					.then(()=> {
-						// OK
-					})
-					.catch((error) => {  showError("Event " + evnt + " error\nMessage: " + error); });
-					
-				}
-			}
-		}
-	};
 	// Check if visible
 	let placeholder = document.getElementById("interactions")
 	if ( placeholder.style.display === "none") {
 		placeholder.style.display = "block"
 	}
-}
-
-function registerHandlers(thing) {
-	// let driving = await thing.readProperty("driving");
-	// let charging = await thing.readProperty("charging");
-
-	// register checkbox listeners
-	/*
-	const checkboxDrive = document.getElementById("drive");
-	checkboxDrive.addEventListener('change', (event) => {
-		if (event.currentTarget.checked) {
-			thing.invokeAction("startDriving");
-		} else {
-			thing.invokeAction("stopDriving");
-		}
-	});
-	const checkboxCharge = document.getElementById("charge");
-	checkboxCharge.addEventListener('change', (event) => {
-		if (event.currentTarget.checked) {
-			thing.invokeAction("startCharging");
-		} else {
-			thing.invokeAction("stopCharging");
-		}
-	});
-	*/
 }
 
 function updateProperties() {
